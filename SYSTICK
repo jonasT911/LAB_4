@@ -21,10 +21,25 @@ NVIC_ST_CURRENT_R     EQU 0xE000E018
 ; Modifies: ??
 SysTick_Init
  ; **-UUU-**Implement this function****
+ 
+	LDR R2,=NVIC_ST_CTRL_R  		;clear enable to stop counter
+	LDR R1,[R2]
+	AND R1,#-2
+	STR R1,[R2]
 
-	LDR R0,= NVIC_ST_RELOAD_R
+	LDR R0,= NVIC_ST_RELOAD_R		;set reload value
+	MOV R1,#8						;8=random number (I dont know)
+	STR R1,[R0]
+	
+	LDR R0,=NVIC_ST_CURRENT_R 		;clear the counter
 	MOV R1,#0
 	STR R1,[R0]
+	
+	LDR R1,[R2]
+	ORR R1,#4
+	AND R1,#-4
+	STR R1,[R2]
+	
 	
 
   
