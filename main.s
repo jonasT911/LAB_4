@@ -47,8 +47,8 @@ Direction SPACE 4 ; -1 for CCW, 0 for stop 1 for CW
 DataBuf   SPACE 100
 TimeBuf   SPACE 400
 	
-DATAPOINT SPACE 1
-TIMEPOINT SPACE 1	
+DATAPOINT SPACE 4
+TIMEPOINT SPACE 4	
 ; ROM Area
         IMPORT TExaS_Init
         IMPORT SysTick_Init
@@ -173,6 +173,7 @@ Debug_Init
 	  LDR R0,=DataBuf
 	  STR R0,[R3]
 	  MOV R2,#0
+
 	  
 STDATALOOP						;STORES FF IN EACH DATA LOCATION
 	  STRH R1,[R0]
@@ -203,7 +204,34 @@ STTIMELOOP						;STORES FF IN EACH TIME LOCATION
 Debug_Capture 
       PUSH {R0-R6,LR}
 ; you write this
-
+	  LDR R0,=DATAPOINT
+	  LDR R1,[R0]
+	  CMP R1,#100
+	  BGT ENDCAP
+	  LDR R0,=TIMEPOINT
+	  LDR R2,[R0]
+	  CMP R2,#200
+	  BGT ENDCAP
+	  
+	  LDR R0,=GPIO_PORTA_DATA_R
+	  LDR R0,[R0]
+	  LDR R3,=GPIO_PORTE_DATA_R 
+	  LDR R3,[R3]
+	  AND R0,#0X10
+	  AND R3,#0XF
+	  ADD R3,R0
+	  
+	  STR R3,[R1]
+	  
+	  
+	  
+	  ADD R1,#1
+	  ADD R2,#2
+	  LDR R0,=DATAPOINT
+	  STR R1,[R0]
+	  LDR R0,=TIMEPOINT
+	  STR R2,[R3]
+ENDCAP
       POP  {R0-R6,PC}
       
 ; edit the following only if you need to move pins from PA4, PE3-0      
