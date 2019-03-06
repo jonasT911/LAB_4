@@ -46,6 +46,9 @@ Direction SPACE 4 ; -1 for CCW, 0 for stop 1 for CW
 ;place your debug variables in RAM here
 DataBuf   SPACE 100
 TimeBuf   SPACE 400
+	
+DATAPOINT SPACE 1
+TIMEPOINT SPACE 1	
 ; ROM Area
         IMPORT TExaS_Init
         IMPORT SysTick_Init
@@ -166,7 +169,9 @@ Debug_Init
       PUSH {R0-R4,LR}
 ; you write this
 	  MOV R1,#0XFF
+	  LDR R3,=DATAPOINT
 	  LDR R0,=DataBuf
+	  STR R0,[R3]
 	  MOV R2,#0
 	  
 STDATALOOP						;STORES FF IN EACH DATA LOCATION
@@ -177,7 +182,9 @@ STDATALOOP						;STORES FF IN EACH DATA LOCATION
 	  
 	  BLT STDATALOOP
 	  
+	  LDR R3,=TIMEPOINT
 	  LDR R0,=TimeBuf
+	  STR R0,[R3]
 	  MOV R1,#-1
 	  MOV R2,#0
 	  
@@ -188,6 +195,8 @@ STTIMELOOP						;STORES FF IN EACH TIME LOCATION
 	  CMP R2,#200
 	  
 	  BLT STTIMELOOP
+	  
+	  BL SysTick_Init
 
       POP {R0-R4,PC}
 ;Debug capture      
@@ -216,6 +225,4 @@ SendDataToLogicAnalyzer
 
       ALIGN      ; make sure the end of this section is aligned
       END        ; end of file
-
-
 
