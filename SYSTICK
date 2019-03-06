@@ -28,7 +28,9 @@ SysTick_Init
 	STR R1,[R2]
 
 	LDR R0,= NVIC_ST_RELOAD_R		;set reload value
-	MOV R1,#8						;8=random number (I dont know)
+	MOV R1,#0X8000
+	LSL R1,#9
+	ADD R1,#-1						;SET RELOAD VALUE TO 2^24-1
 	STR R1,[R0]
 	
 	LDR R0,=NVIC_ST_CURRENT_R 		;clear the counter
